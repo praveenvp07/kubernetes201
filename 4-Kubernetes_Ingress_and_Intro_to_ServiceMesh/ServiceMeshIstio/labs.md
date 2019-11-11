@@ -36,7 +36,8 @@ kubectl get pods -n istio-system
 ```command
 kubectl get svc -n istio-system
 ```
-- Label the Default namespace to enable `sidecar injection`.The Istio-Sidecar-injector will automatically inject Envoy containers into your application pods. The injector assumes the application pods are running in namespaces labeled with `istio-injection=enabled`
+- Label the Default namespace to enable `sidecar injection`.
+The Istio-Sidecar-injector will automatically inject Envoy containers into your application pods. The injector assumes the application pods are running in namespaces labeled with `istio-injection=enabled`
 
 ```command
 kubectl label namespace default istio-injection=enabled
@@ -509,26 +510,21 @@ Visit : <a href="http://localhost:16686"> localhost:16686 </a> to see jaeger das
 
 ### Generating traces using the Bookinfo sample
 
-
-- When the Bookinfo application is up and running, access `http://$GATEWAY_URL/productpage` one or more times to generate trace information.
+ When the Bookinfo application is up and running, access `http://$GATEWAY_URL/productpage` one or more times to generate trace information.
 - To send a 100 requests to the productpage service, use the following command:
 
 ```command
 for i in `seq 1 100`; do curl -s -o /dev/null http://$GATEWAY_URL/productpage; done
 ```
 
--From the left-hand pane of the dashboard, select productpage from the Service drop-down list and click Find Traces.
+- From the left-hand pane of the dashboard, select productpage from the Service drop-down list and click Find Traces.
 
--The trace is comprised of a set of spans, where each span corresponds to a Bookinfo service, invoked during the execution of a /productpage request, or internal Istio component.
-
-
- 
+- The trace is comprised of a set of spans, where each span corresponds to a Bookinfo service, invoked during the execution of a /productpage request, or internal Istio component.
 
 
 ### Traffic Shifting
 
-
-**To get started, run this command to route all traffic to the v1 version of each microservice (same as that of request routing lab)**
+*To get started, run the following command to route all traffic to the v1 version of each microservice (already done this in request routing lab)
 
 ```command
 kubectl apply -f configs/virtual-service-all-v1.yaml
@@ -598,7 +594,7 @@ spec:
 http://68.183.83.147:31380/productpage
 ```
 
-**Transfer 50% of the traffic from reviews:v1 to reviews:v3 with the following configuration:**
+#### Transfer 50% of the traffic from reviews:v1 to reviews:v3 with the following configuration:
 
 ```command
 kubectl apply -f configs/virtual-service-reviews-50-v3.yaml
@@ -635,7 +631,9 @@ spec:
 
 ***Refresh the /productpage in your browser and you now see red colored star ratings approximately 50% of the time. This is because the v3 version of reviews accesses the star ratings service, but the v1 version does not.***
 
-**Assuming you decide that the reviews:v3 microservice is stable, you can route 100% of the traffic to reviews:v3 by applying this virtual service:**
+#### Transfer 100% of the traffic to version reviews:v3 
+
+*Assuming you decide that the reviews:v3 microservice is stable, you can route 100% of the traffic to reviews:v3 by applying this virtual service:*
 
 ```command
 kubectl apply -f configs/virtual-service-reviews-v3.yaml
