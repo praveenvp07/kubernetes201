@@ -1,12 +1,15 @@
 
 
-# istio
+# Istio
 
-Istio installation.
+## Installation
 
+- Download required version.
+
+*Current latest vaerion is 1.3.4*
 
 ```command
-curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.0.5 sh -
+curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.3.4 sh -
 cd istio-1.*
 sudo cp bin/istioctl /usr/bin/.
 ```
@@ -14,8 +17,9 @@ sudo cp bin/istioctl /usr/bin/.
 - Install required CRD.
 
 ```command
-kubectl apply -f install/kubernetes/helm/istio/templates/crds.yaml
+for i in install/kubernetes/helm/istio-init/files/crd*yaml; do kubectl apply -f $i; done
 ```
+
 - Update `install/kubernetes/istio-demo.yaml`. find `istio-ingressgateway` service,  `grafana` service, `prometheus` service, `servicegraph` service and update `type: NodePort` in it.
 
 
@@ -52,7 +56,9 @@ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressga
 export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 ```
 
-- Deploy Bookinfo application:
+## Application Deployment
+
+### Deploy Bookinfo application:
 
 
 ```yaml
@@ -328,7 +334,7 @@ spec:
 kubectl apply -f configs/bookinfo-gateway.yaml
 ```
 
-To confirm that the Bookinfo application is accessible from outside the cluster, run the following curl command:
+- To confirm that the Bookinfo application is accessible from outside the cluster, run the following curl command:
 
 ```command
 curl -s http://${GATEWAY_URL}/productpage | grep -o "<title>.*</title>"
@@ -344,9 +350,7 @@ http://<nodeIP>:31380/productpage
 
 ### Apply default destination rules.
 
-```command
-kubectl apply -f configs/destination-rule-all.yaml
-```
+
 ```yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -413,11 +417,12 @@ spec:
 
 ```
 
+```command
+kubectl apply -f configs/destination-rule-all.yaml
+```
 
 
 ### Request Routing:
-
-
 
 - Apply a virtual service.
 
